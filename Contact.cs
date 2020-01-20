@@ -7,7 +7,6 @@ namespace AddressBook
     {
         protected string firstName;
         protected string lastName;
-        protected string fullName;
         protected string phoneNumber;
         protected string emailAddress;
 
@@ -23,7 +22,6 @@ namespace AddressBook
         public Contact(string first, string last, string phoneNum) : this(first, last)
         {
             phone = phoneNum;
-            fullName = last + ", " + first;
         } 
 
         public Contact(string first, string last, string phone, string email) : this(first, last, phone)
@@ -31,15 +29,10 @@ namespace AddressBook
             emailAddress = email;
         }
 
-        public void SetFullName()
-        {
-            fullName = lastName + ", " + firstName;
-        }
-
         // Virtual so that it can be overridden in subclasses to add more information
         public virtual string ToDisplayString()
         {
-            return fullName + " Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " Email: " + emailAddress;
+            return firstName + " " + lastName + " Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " Email: " + emailAddress;
         }
 
         public virtual string ToStringCSV()
