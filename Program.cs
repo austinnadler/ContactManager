@@ -142,6 +142,11 @@ namespace AddressBook
                 contacts.Add(c);
             }
         } // end CreateNewContact()
+
+        public static void DeleteContact(ref List<Contact> contacts)
+        {
+            contacts.RemoveAt(GetValidIndex(ref contacts, "delete"));           
+        }
         
         public static void EditContact(ref List<Contact> contacts)
         {
@@ -251,7 +256,7 @@ namespace AddressBook
             {
                 throw new ArgumentNullException(nameof(contact));
             }
-        }
+        } // EditInstructorContact()
 
         /*------------------------------ File IO ------------------------------*/
         public static List<Contact> ReadContactsFromFile()
@@ -259,7 +264,7 @@ namespace AddressBook
             {
                 return File.ReadAllLines("contacts.csv").Select(v => ReadLineFromFile(v)).ToList();
             }
-        }
+        } // ReadContactsFromFile()
 
         public static Contact ReadLineFromFile(string csvLine)
         {
@@ -273,7 +278,7 @@ namespace AddressBook
             {
                 return new InstructorContact(values[1], values[2], values[3], values[4], values[5]);
             }
-        }
+        } // ReadLineFromFile()
 
         public static void WriteContactsToFile(ref List<Contact> contacts)
         {
@@ -288,7 +293,8 @@ namespace AddressBook
                 list +=  type + contacts[i].toStringCSV() + "\n";
             }
             System.IO.File.WriteAllText("contacts.csv", list);
-        }
+        } // WriteContactsToFile()
+
         /*------------------------------ End File IO ------------------------------*/
 
         /*------------------------------ Utilities ------------------------------*/
@@ -322,7 +328,7 @@ namespace AddressBook
                 }
             } while(!validIndex);
             return index;
-        }
+        } // end GetValidIndex()
 
         public static string GetValidPhoneNumber()
         {
@@ -342,12 +348,12 @@ namespace AddressBook
                 }
             } while(!validPhone || phone.Length != 10);
             return phone;
-        }
+        } // end GetValidPhoneNumber()
 
         public static bool IsNum(string str)
         {
             return str.All(char.IsNumber);
-        }
+        } // end IsNum()
 
         public static string GetValidEmail()
         {
@@ -367,12 +373,8 @@ namespace AddressBook
                 }
             } while(!validEmail);
             return email;
-        }
-
-        public static void DeleteContact(ref List<Contact> contacts)
-        {
-            contacts.RemoveAt(GetValidIndex(ref contacts, "delete"));           
-        }
+        } // end GetValidEmail()
+        
         /*------------------------------ End Utilities ------------------------------*/
     }
 }
