@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualBasic;
 
 namespace AddressBook
 {
@@ -103,7 +104,7 @@ namespace AddressBook
         public static void CreateNewContact(ref List<Contact> contacts)
         {
             string first, last, office, isInstr = "";
-            Contact c = new Contact();
+            Contact c;
 
             Console.Write("\nFirst name: ");
             first = Console.ReadLine();
@@ -331,8 +332,7 @@ namespace AddressBook
             {
                 Console.Write("Phone number: ");
                 phone = Console.ReadLine();
-                validPhone = int.TryParse(phone, out int n);
-                if(!validPhone || phone.Length != 10)
+                if(!IsNum(phone) || phone.Length != 10)
                 {
                     Console.WriteLine("Invalid phone number. Try again.");
                 }
@@ -342,6 +342,11 @@ namespace AddressBook
                 }
             } while(!validPhone || phone.Length != 10);
             return phone;
+        }
+
+        public static bool IsNum(string str)
+        {
+            return str.All(char.IsNumber);
         }
 
         public static string GetValidEmail()

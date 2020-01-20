@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace AddressBook
 {
@@ -69,7 +70,7 @@ namespace AddressBook
                 }
                 else
                 {
-                    if(!isValidPhoneNumber(value))
+                    if(!IsNum(value))
                     {
                         throw new ArgumentException("Phone number must only contain digits");
                     }
@@ -98,14 +99,9 @@ namespace AddressBook
         }
 
         /*---------- Utlities ----------*/
-        public bool isValidPhoneNumber(string number)
+        private bool IsNum(string str)
         {
-            bool valid = false;
-            foreach(Char c in number.ToCharArray())
-            {
-                valid = Char.IsDigit(c);
-            }
-            return valid;
+            return str.All(char.IsNumber);
         }
     }
 }
