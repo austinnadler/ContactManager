@@ -34,14 +34,14 @@ namespace AddressBook
             set { officeLocation = value;}
         }
 
-        public override string toString()
+        public override string ToDisplayString()
         {
-            return base.toString() + " Office: " + officeLocation;
+            return base.ToDisplayString() + " Office: " + officeLocation;
         }
 
-        public override string toStringCSV()
+        public override string ToStringCSV()
         {
-            return base.toStringCSV() + "," + officeLocation;
+            return base.ToStringCSV() + "," + officeLocation;
         }
     }
 }

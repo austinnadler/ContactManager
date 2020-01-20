@@ -290,7 +290,7 @@ namespace AddressBook
                 {
                     type = "i,";
                 }
-                list +=  type + contacts[i].toStringCSV() + "\n";
+                list +=  type + contacts[i].ToStringCSV() + "\n";
             }
             System.IO.File.WriteAllText("contacts.csv", list);
         } // WriteContactsToFile()

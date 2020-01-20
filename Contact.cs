@@ -31,18 +31,18 @@ namespace AddressBook
             emailAddress = email;
         }
 
-        public void setFullName()
+        public void SetFullName()
         {
             fullName = lastName + ", " + firstName;
         }
 
         // Virtual so that it can be overridden in subclasses to add more information
-        public virtual string toString()
+        public virtual string ToDisplayString()
         {
             return fullName + " Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " Email: " + emailAddress;
         }
 
-        public virtual string toStringCSV()
+        public virtual string ToStringCSV()
         {
             return firstName + "," + lastName + "," + phoneNumber + "," + emailAddress;
         }
