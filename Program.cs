@@ -10,6 +10,7 @@ namespace AddressBook
     {
         static void Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             List<Contact> contacts = new List<Contact>();
             try
             {
@@ -87,16 +88,16 @@ namespace AddressBook
             }
             else
             {
-                Console.WriteLine();
+                Console.WriteLine("------------------------------------------------------------------------------------");
                 for(int i = 0; i < contacts.Count; i++) // Regular for loop because I want to show indecies for selection
                 {
                     Contact contact = contacts[i];
-                    Console.Write(i + ". " + contact.first + " " + contact.last + " " + contact.phone + " " + contact.email);
+                    Console.Write(i + ". " + contact.ToDisplayString());
                     if(contact is InstructorContact ic)
                     {
-                        Console.Write(" Office: " + ic.office);
+                        Console.WriteLine(" Office: " + ic.office);
                     }
-                    Console.WriteLine();
+                    Console.WriteLine("\n------------------------------------------------------------------------------------");
                 }
             }
         } // end ListAllContacts()

@@ -32,7 +32,7 @@ namespace AddressBook
         // Virtual so that it can be overridden in subclasses to add more information
         public virtual string ToDisplayString()
         {
-            return firstName + " " + lastName + " Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " Email: " + emailAddress;
+            return firstName + " " + lastName + " - Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " - Email: " + emailAddress;
         }
 
         public virtual string ToStringCSV()
