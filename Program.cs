@@ -1,7 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;                    // File IO
+using System.Collections.Generic;   // List<T>
+using System.Linq;                  // LINQ queries.
+using System.Globalization;         // CultureInfo class for case insensitive comparison in LINQ queries.
 
 namespace AddressBook
 {
@@ -9,7 +10,7 @@ namespace AddressBook
     {
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Green;
             List<Contact> contacts = new List<Contact>();
             try
             {
@@ -21,6 +22,7 @@ namespace AddressBook
             }
             Start(ref contacts);
             WriteContactsToFile(ref contacts);
+            Console.ForegroundColor = ConsoleColor.White;
         } // end Main()
 
         public static void Start(ref List<Contact> contacts) 
@@ -34,12 +36,13 @@ namespace AddressBook
                                     "\n2. Create New Contact" + 
                                     "\n3. Delete Contact" + 
                                     "\n4. Edit Contact" + 
-                                    "\n5. Quit\n");
+                                    "\n5. Search Contacts" +
+                                    "\n6. Quit\n");
                 Console.Write("Enter the number of your choice: ");
                 try
                 {
                     choice = Convert.ToInt32(Console.ReadLine());
-                    if(choice > 5 || choice < 1)
+                    if(choice > 6 || choice < 1)
                     {
                         Console.WriteLine("Invalid choice, try again");
                     }
@@ -69,6 +72,10 @@ namespace AddressBook
                             Start(ref contacts);
                             break;
                         case 5:
+                            SearchContacts(ref contacts);
+                            Start(ref contacts);
+                            break;
+                        case 6:
                             break;
                         default:
                             break;
@@ -87,12 +94,12 @@ namespace AddressBook
         { // Print out all contacts using their ToDisplayString().
             if(contacts.Count < 1)
             {
-                Console.WriteLine("You have not created any contacts yet.");
+                Console.WriteLine("You have not created any contacts yet4.");
             }
             else
             {
                 Contact contact;
-                Console.WriteLine("------------------------------------------------------------------------------------");
+                Console.WriteLine("\n------------------------------------------------------------------------------------");
                 for(int i = 0; i < contacts.Count; i++) // Regular for loop because I want to show indecies for selection
                 {
                     contact = contacts[i];
@@ -151,7 +158,13 @@ namespace AddressBook
 
         public static void DeleteContact(ref List<Contact> contacts)
         { // Delete a contact at a valid index.
-            contacts.RemoveAt(GetValidIndex(ref contacts, "delete"));           
+            int contactIndex = GetValidIndex(ref contacts, "delete");
+
+            if(contactIndex == -1) 
+            {
+                return;
+            }
+            contacts.RemoveAt(contactIndex);           
         } // end DeleteContact()
         
         public static void EditContact(ref List<Contact> contacts)
@@ -159,7 +172,14 @@ namespace AddressBook
             bool validChoice = false;
             int choice;
             int maxFieldIndex; // needed in place of a boolean so that the choice can be validated based on the number of possible choices for that contact type.
-            Contact contact = contacts[GetValidIndex(ref contacts, "edit")];
+            int contactIndex = GetValidIndex(ref contacts, "edit");
+
+            if(contactIndex == -1) 
+            {
+                return;
+            }
+
+            Contact contact = contacts[contactIndex];
 
             if(contact is InstructorContact ic)
             {
@@ -167,7 +187,8 @@ namespace AddressBook
                                     "\n1. Last name: " + ic.last + 
                                     "\n2. Phone #: " + ic.phone + 
                                     "\n3. Email: " + ic.email + 
-                                    "\n4. Office: " + ic.office);
+                                    "\n4. Office: " + ic.office +
+                                    "\n9. Cancel");
                 maxFieldIndex = 4;
             }
             else
@@ -175,7 +196,8 @@ namespace AddressBook
                 Console.WriteLine(  "\n0. First name: " + contact.first +
                                     "\n1. Last name: " + contact.last + 
                                     "\n2. Phone #: " + contact.phone + 
-                                    "\n3. Email: " + contact.email);
+                                    "\n3. Email: " + contact.email +
+                                    "\n9. Cancel");
                 maxFieldIndex = 3;
             }
 
@@ -185,6 +207,12 @@ namespace AddressBook
                 try
                 {
                     choice = Convert.ToInt32(Console.ReadLine());
+
+                    if(choice == 9) 
+                    {
+                        return;
+                    }
+
                     if(choice < 0 || choice > maxFieldIndex)
                     {
                         Console.WriteLine("Invalid choice. Try again.");
@@ -236,9 +264,7 @@ namespace AddressBook
 
         public static void EditInstructorContact(InstructorContact contact, ref int choice)
         { // Allow editing of an InstructorContact. Appropriate fields are error checked, while others are not.
-            if (!(contact is null))
-            {
-                switch (choice)
+             switch (choice)
                 {
                     case 0:
                         Console.Write("Enter the new first name: ");
@@ -263,12 +289,127 @@ namespace AddressBook
                     default:
                         break;
                 }
+        } // EditInstructorContact()
+
+        public static void SearchContacts(ref List<Contact> contacts)
+        {
+            bool found = false;
+            string searchAgain;
+            int choice;
+            do
+            {
+                Console.Write(  "\nSearch Options" +
+                                "\n1. Search by name (first or last)" +
+                                "\n2. Search by phone number" +
+                                "\n3. Search by email address" + 
+                                "\n4. Cancel" +
+                                "\n\nEnter your choice: ");
+                try
+                {
+                    choice = Convert.ToInt32(Console.ReadLine());
+                    if(choice > 0 && choice < 5)
+                    {
+                        switch(choice)
+                        {
+                            case 1:
+                                SearchByName(ref contacts);
+                                break;
+                            case 2:
+                                SearchByPhone(ref contacts);
+                                break;
+                            case 3: 
+                                SearchByEmail(ref contacts);
+                                break;
+                            case 4:
+                                return;
+                            default:
+                                break;
+                        }
+
+                        do
+                        {
+                            Console.Write("\nDo you want to search again? (y/n): ");
+                            searchAgain = Console.ReadLine();
+                            if(searchAgain == "n")
+                            {
+                                found = true;
+                            }
+                        } while(searchAgain != "y" && searchAgain != "n");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid choice. Try again.");
+                    }
+                } 
+                catch(FormatException)
+                {
+                    Console.WriteLine("Invalid choice. Try again.");
+                }
+            } while(!found);
+        } // end SearchContacts()
+
+        public static void SearchByName(ref List<Contact> contacts)
+        {
+            Console.Write("\nEnter the name to search by: ");
+            string name = Console.ReadLine();
+            List<Contact> matches = QueryByName(ref contacts, name);
+            Console.WriteLine("\n------------------------------------------------------------------------------------");
+            if(matches.Count > 0)
+            {
+                foreach(Contact contact in matches)
+                {
+                    Console.WriteLine(contact.ToDisplayString());
+                    Console.WriteLine("------------------------------------------------------------------------------------");
+                }
             }
             else
             {
-                throw new ArgumentNullException(nameof(contact));
+                Console.WriteLine("No contacts first or last name contains " + name);
+                Console.WriteLine("------------------------------------------------------------------------------------\n");
             }
-        } // EditInstructorContact()
+        }
+
+        public static void SearchByPhone(ref List<Contact> contacts)
+        {
+            Console.Write("\nEnter the phone number to search by: ");
+            string phone = Console.ReadLine();
+            List<Contact> matches = QueryrByPhone(ref contacts, phone);
+            Console.WriteLine("\n------------------------------------------------------------------------------------");
+            if(matches.Count > 0)
+            {
+                foreach(Contact contact in matches)
+                {
+                    Console.WriteLine(contact.ToDisplayString());
+                    Console.WriteLine("------------------------------------------------------------------------------------");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No contacts phone number contains " + phone);
+                Console.WriteLine("------------------------------------------------------------------------------------");
+            }
+        }
+
+        public static void SearchByEmail(ref List<Contact> contacts)
+        {
+            Console.Write("\nEnter the email to search by: ");
+            string email = Console.ReadLine();
+            List<Contact> matches = QueryByEmail(ref contacts, email);
+            Console.WriteLine("\n------------------------------------------------------------------------------------");
+            if(matches.Count > 0)
+            {
+                foreach(Contact contact in matches)
+                {
+                    Console.WriteLine(contact.ToDisplayString());
+                    Console.WriteLine("------------------------------------------------------------------------------------");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No contacts first or last name contains " + email);
+                Console.WriteLine("------------------------------------------------------------------------------------");
+            }
+        }
 
         /*------------------------------ File IO ------------------------------*/
         public static List<Contact> ReadContactsFromFile()
@@ -312,17 +453,23 @@ namespace AddressBook
         /*------------------------------ Utilities ------------------------------*/
 
         public static int GetValidIndex(ref List<Contact> contacts, string action)
-        { // Helper for DeleteContact & EditContact. Returns a valid index provided by user.
+        { // Helper for DeleteContact & EditContact. Returns a valid index provided by user. Returns -1 if user wants to cancel.
             bool validIndex = false;
             bool isInt = false;
             int index = -1;
             ListAllContacts(ref contacts);
             do
             {
-                Console.Write("\nEnter the index of the contact you want to " + action + ": ");
+                Console.Write("Enter the index of the contact you want to " + action + " (or -1 to cancel): ");
                 try
                 {
                     index = Convert.ToInt32(Console.ReadLine());
+
+                    if(index == -1) 
+                    {
+                        return -1;
+                    }
+
                     isInt = true;
                     if(isInt && index > -1 && index < contacts.Count)
                     {
@@ -400,5 +547,49 @@ namespace AddressBook
         } // end IsNum()
 
         /*------------------------------ End Utilities ------------------------------*/
+
+        /*------------------------------ LINQ Searches ------------------------------*/
+        // TODO: Enable editing of contacts after the LINQ query runs.
+        public static List<Contact> QueryByName(ref List<Contact> contacts, string value)
+        { // Use LINQ to display all contacts whose first or last name contains the value. LINQ ref: Pro C# 7 Ch. 12 & https://stackoverflow.com/questions/444798/case-insensitive-containsstring
+            CultureInfo culture = new CultureInfo("en-US", false); 
+            return  ( 
+                        from c in contacts 
+                        where 
+                        (
+                            culture.CompareInfo.IndexOf(c.first, value, CompareOptions.IgnoreCase) >= 0 
+                            || culture.CompareInfo.IndexOf(c.last, value, CompareOptions.IgnoreCase) >= 0
+                        )
+                        orderby c.last, c.first 
+                        select c
+                    ).ToList<Contact>();
+            
+        } // end SearchForByName()
+
+        public static List<Contact> QueryrByPhone(ref List<Contact> contacts, string value)
+        {
+            return  ( 
+                        from c in contacts
+                        where c.phone.Contains(value)
+                        orderby c.last, c.first
+                        select c
+                    ).ToList<Contact>();
+        } // end SearchForByPhone()
+
+        public static List<Contact> QueryByEmail(ref List<Contact> contacts, string value)
+        {
+            CultureInfo culture = new CultureInfo("en-US", false);
+            return  (
+                        from c in contacts
+                        where
+                        (
+                            culture.CompareInfo.IndexOf(c.email, value, CompareOptions.IgnoreCase) >= 0
+                        )
+                        orderby c.last, c.first
+                        select c
+                    ).ToList<Contact>();
+        } // end SearchForByEmail()
+
+        /*------------------------------ End LINQ Searches ------------------------------*/
     }
 }
