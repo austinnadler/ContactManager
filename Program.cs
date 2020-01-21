@@ -373,7 +373,7 @@ namespace AddressBook
         {
             Console.Write("\nEnter the phone number to search by: ");
             string phone = Console.ReadLine();
-            List<Contact> matches = QueryrByPhone(ref contacts, phone);
+            List<Contact> matches = QueryByPhone(ref contacts, phone);
             Console.WriteLine("\n------------------------------------------------------------------------------------");
             if(matches.Count > 0)
             {
@@ -406,7 +406,7 @@ namespace AddressBook
             }
             else
             {
-                Console.WriteLine("No contacts first or last name contains " + email);
+                Console.WriteLine("No contacts email address contains " + email);
                 Console.WriteLine("------------------------------------------------------------------------------------");
             }
         }
@@ -529,7 +529,7 @@ namespace AddressBook
                     Console.Write("Enter the new email address: ");
                 }
                 email = Console.ReadLine();
-                if(!email.Contains("@") || !email.Contains("."))
+                if(!email.Contains("@") || !email.Contains(".")) // Only validates that the email contains '@' and '.'. Makes testing easier
                 {
                     Console.WriteLine("Invalid email address. Try again");
                 }
@@ -566,7 +566,7 @@ namespace AddressBook
             
         } // end SearchForByName()
 
-        public static List<Contact> QueryrByPhone(ref List<Contact> contacts, string value)
+        public static List<Contact> QueryByPhone(ref List<Contact> contacts, string value)
         {
             return  ( 
                         from c in contacts
