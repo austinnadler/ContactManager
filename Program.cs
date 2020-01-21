@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualBasic;
 
 namespace AddressBook
 {
@@ -88,10 +87,11 @@ namespace AddressBook
             }
             else
             {
+                Contact contact;
                 Console.WriteLine("------------------------------------------------------------------------------------");
                 for(int i = 0; i < contacts.Count; i++) // Regular for loop because I want to show indecies for selection
                 {
-                    Contact contact = contacts[i];
+                    contact = contacts[i];
                     Console.Write(i + ". " + contact.ToDisplayString());
                     if(contact is InstructorContact ic)
                     {
@@ -105,7 +105,7 @@ namespace AddressBook
         public static void CreateNewContact(ref List<Contact> contacts)
         {
             string first, last, office, isInstr = "";
-            Contact c;
+            Contact contact;
 
             Console.Write("\nFirst name: ");
             first = Console.ReadLine();
@@ -120,18 +120,18 @@ namespace AddressBook
 
             if(isInstr == "n")
             {
-                c = new Contact(first, last);
+                contact = new Contact(first, last);
             }
             else // if(isInstr == "y")
             {
-                c = new InstructorContact(first, last);
+                contact = new InstructorContact(first, last);
             }
 
-            c.phone = GetValidPhoneNumber();
+            contact.phone = GetValidPhoneNumber();
 
-            c.email = GetValidEmail();
+            contact.email = GetValidEmail();
                 
-            if(c is InstructorContact ic)
+            if(contact is InstructorContact ic)
             {
                 Console.Write("Office location: ");
                 office = Console.ReadLine();
@@ -140,7 +140,7 @@ namespace AddressBook
             }
             else
             {
-                contacts.Add(c);
+                contacts.Add(contact);
             }
         } // end CreateNewContact()
 
