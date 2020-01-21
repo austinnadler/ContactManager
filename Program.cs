@@ -192,15 +192,14 @@ namespace AddressBook
                     else
                     {
                         validChoice = true;
-                    }
-
-                    if(maxFieldIndex == 3)
-                    {
-                        EditBasicContact(contact, ref choice);
-                    }
-                    else // if(maxFieldIndex == 4)
-                    {
-                        EditInstructorContact(new InstructorContact(contact), ref choice);
+                        if(maxFieldIndex == 3)
+                        {
+                            EditBasicContact(contact, ref choice);
+                        }
+                        else // if(maxFieldIndex == 4)
+                        {
+                            EditInstructorContact(new InstructorContact(contact), ref choice);
+                        }
                     }
                 }
                 catch(FormatException)
@@ -282,9 +281,9 @@ namespace AddressBook
         public static Contact ReadLineFromFile(string csvLine)
         { // Helper for ReadContactsFromFile(). Reads a single line from contacts.csv and stores each of them in an object.
             string[] values = csvLine.Split(',');
-            string type = values[0];
+            string type = values[0]; // First index that will be read from the file is the contact type.
             if(type == "b")
-            {
+            { // Start reading actual values at index 1.
                 return new Contact(values[1], values[2], values[3], values[4]);
             }
             else // if (type == "i")
@@ -303,7 +302,7 @@ namespace AddressBook
                 {
                     type = "i,";
                 }
-                list +=  type + contact.ToStringCSV() + "\n";
+                list += type + contact.ToStringCSV() + "\n";
             }
             System.IO.File.WriteAllText("contacts.csv", list);
         } // WriteContactsToFile()
@@ -400,7 +399,6 @@ namespace AddressBook
             return str.All(char.IsNumber);
         } // end IsNum()
 
-        
         /*------------------------------ End Utilities ------------------------------*/
     }
 }
