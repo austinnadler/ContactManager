@@ -24,7 +24,7 @@ namespace AddressBook
         } // end Main()
 
         public static void Start(ref List<Contact> contacts) 
-        {
+        { // Start the program. This method is outside of Main() so that it can be called at the end of a process.
             Console.WriteLine("\n*** Address Book ***");
             bool validChoice = false;
             int choice;
@@ -84,7 +84,7 @@ namespace AddressBook
         } // end Start()
 
         public static void ListAllContacts(ref List<Contact> contacts) 
-        {
+        { // Print out all contacts using their ToDisplayString().
             if(contacts.Count < 1)
             {
                 Console.WriteLine("You have not created any contacts yet.");
@@ -150,15 +150,15 @@ namespace AddressBook
         } // end CreateNewContact()
 
         public static void DeleteContact(ref List<Contact> contacts)
-        {
+        { // Delete a contact at a valid index.
             contacts.RemoveAt(GetValidIndex(ref contacts, "delete"));           
         } // end DeleteContact()
         
         public static void EditContact(ref List<Contact> contacts)
-        {
+        { // Begin the process of editing a contact. Gets a valid index using GetValidIndex() and determines what kind of contact is being dealt with. It then passes the process to the appropriate method.
             bool validChoice = false;
             int choice;
-            int maxFieldIndex; // needed in place of a boolean so that the choice can be validated based on the number of possible choices for that contact type
+            int maxFieldIndex; // needed in place of a boolean so that the choice can be validated based on the number of possible choices for that contact type.
             Contact contact = contacts[GetValidIndex(ref contacts, "edit")];
 
             if(contact is InstructorContact ic)
@@ -211,7 +211,7 @@ namespace AddressBook
         } // end EditContact()
 
         public static void EditBasicContact(Contact contact, ref int choice)
-        {
+        { // Allow editing of an Contact. Appropriate fields are error checked, while others are not.
             switch(choice)
             {
                 case 0:
@@ -236,7 +236,7 @@ namespace AddressBook
         } // end EditBasicContact()
 
         public static void EditInstructorContact(InstructorContact contact, ref int choice)
-        {
+        { // Allow editing of an InstructorContact. Appropriate fields are error checked, while others are not.
             if (!(contact is null))
             {
                 switch (choice)
@@ -273,14 +273,14 @@ namespace AddressBook
 
         /*------------------------------ File IO ------------------------------*/
         public static List<Contact> ReadContactsFromFile()
-        {
+        { // Read all contacts from contact.csv and passes each individual line to ReadLineFromFile() to be stored in an object.
             {
                 return File.ReadAllLines("contacts.csv").Select(v => ReadLineFromFile(v)).ToList();
             }
         } // ReadContactsFromFile()
 
         public static Contact ReadLineFromFile(string csvLine)
-        {
+        { // Helper for ReadContactsFromFile(). Reads a single line from contacts.csv and stores each of them in an object.
             string[] values = csvLine.Split(',');
             string type = values[0];
             if(type == "b")
@@ -294,7 +294,7 @@ namespace AddressBook
         } // ReadLineFromFile()
 
         public static void WriteContactsToFile(ref List<Contact> contacts)
-        {
+        { // Write the entire List<> to contacts.csv. If one exists it's overwritten.
             string list = "";
             foreach(Contact contact in contacts)
             {
@@ -313,7 +313,7 @@ namespace AddressBook
         /*------------------------------ Utilities ------------------------------*/
 
         public static int GetValidIndex(ref List<Contact> contacts, string action)
-        {// Helper for DeleteContact & EditContact. Returns a valid index provided by user.
+        { // Helper for DeleteContact & EditContact. Returns a valid index provided by user.
             bool validIndex = false;
             bool isInt = false;
             int index = -1;
@@ -396,7 +396,7 @@ namespace AddressBook
         } // end GetValidEmail()
 
         public static bool IsNum(string str)
-        {
+        { // Return true if the provided string is comprised of all integers, false otherwise.
             return str.All(char.IsNumber);
         } // end IsNum()
 
