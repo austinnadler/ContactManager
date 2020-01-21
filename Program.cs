@@ -95,15 +95,16 @@ namespace AddressBook
                     Console.Write(i + ". " + contact.ToDisplayString());
                     if(contact is InstructorContact ic)
                     {
-                        Console.WriteLine(" Office: " + ic.office);
+                        Console.Write(" Office: " + ic.office);
                     }
                     Console.WriteLine("\n------------------------------------------------------------------------------------");
                 }
             }
         } // end ListAllContacts()
 
+        
         public static void CreateNewContact(ref List<Contact> contacts)
-        {
+        { // Get information on the new contact and add them to the List<>. Changes are saved when the program exits.
             string first, last, office, isInstr = "";
             Contact contact;
 
@@ -127,9 +128,9 @@ namespace AddressBook
                 contact = new InstructorContact(first, last);
             }
 
-            contact.phone = GetValidPhoneNumber();
+            contact.phone = GetValidPhoneNumber(false);
 
-            contact.email = GetValidEmail();
+            contact.email = GetValidEmail(false);
                 
             if(contact is InstructorContact ic)
             {
@@ -153,23 +154,30 @@ namespace AddressBook
         {
             bool validChoice = false;
             int choice;
-            int maxFieldIndex;
+            int maxFieldIndex; // needed in place of a boolean so that the choice can be validated based on the number of possible choices for that contact type
             Contact contact = contacts[GetValidIndex(ref contacts, "edit")];
 
             if(contact is InstructorContact ic)
             {
-                Console.WriteLine("\n0. First name: " + ic.first + "\n1. Last name: " + ic.last + "\n2. Phone #: " + ic.phone + "\n3. Email: " + ic.email + "\n4. Office: " + ic.office);
+                Console.WriteLine(  "\n0. First name: " + ic.first + 
+                                    "\n1. Last name: " + ic.last + 
+                                    "\n2. Phone #: " + ic.phone + 
+                                    "\n3. Email: " + ic.email + 
+                                    "\n4. Office: " + ic.office);
                 maxFieldIndex = 4;
             }
             else
             {
-                Console.WriteLine("\n0. First name: " + contact.first + "\n1. Last name: " + contact.last + "\n2. Phone #: " + contact.phone + "\n3. Email: " + contact.email);
+                Console.WriteLine(  "\n0. First name: " + contact.first +
+                                    "\n1. Last name: " + contact.last + 
+                                    "\n2. Phone #: " + contact.phone + 
+                                    "\n3. Email: " + contact.email);
                 maxFieldIndex = 3;
             }
 
             do
             {
-                Console.Write("\nWhat field of this customer do you want to edit?: ");
+                Console.Write("\nWhat field of this contact do you want to edit?: ");
                 try
                 {
                     choice = Convert.ToInt32(Console.ReadLine());
@@ -212,11 +220,11 @@ namespace AddressBook
                     break;
                 case 2: 
                     Console.Write("Enter the new phone number: ");
-                    contact.phone = GetValidPhoneNumber();
+                    contact.phone = GetValidPhoneNumber(true);
                     break;
                 case 3:
                     Console.Write("Enter the new email address: ");
-                    contact.email = GetValidEmail();
+                    contact.email = GetValidEmail(true);
                     break;
                 default:
                     break;
@@ -239,11 +247,11 @@ namespace AddressBook
                         break;
                     case 2:
                         Console.Write("Enter the new phone number: ");
-                        contact.phone = GetValidPhoneNumber();
+                        contact.phone = GetValidPhoneNumber(true);
                         break;
                     case 3:
                         Console.Write("Enter the new email address: ");
-                        contact.email = GetValidEmail();
+                        contact.email = GetValidEmail(true);
                         break;
                     case 4:
                         Console.Write("Enter the new office location: ");
@@ -284,14 +292,14 @@ namespace AddressBook
         public static void WriteContactsToFile(ref List<Contact> contacts)
         {
             string list = "";
-            for(int i = 0; i < contacts.Count; i++)
+            foreach(Contact contact in contacts)
             {
                 string type = "b,"; // Initialize type to basic for every contact.
-                if(contacts[i] is InstructorContact)
+                if(contact is InstructorContact)
                 {
                     type = "i,";
                 }
-                list +=  type + contacts[i].ToStringCSV() + "\n";
+                list +=  type + contact.ToStringCSV() + "\n";
             }
             System.IO.File.WriteAllText("contacts.csv", list);
         } // WriteContactsToFile()
@@ -331,13 +339,20 @@ namespace AddressBook
             return index;
         } // end GetValidIndex()
 
-        public static string GetValidPhoneNumber()
-        {
+        public static string GetValidPhoneNumber(bool updating)
+        { // bool updating = true if changing, false if providing original
             string phone;
             bool validPhone = false;
             do
             {
-                Console.Write("Phone number: ");
+                if(!updating)
+                {
+                    Console.Write("Phone number: ");
+                }
+                else
+                {
+                    Console.Write("Enter the new phone number: ");
+                }
                 phone = Console.ReadLine();
                 if(!IsNum(phone) || phone.Length != 10)
                 {
@@ -350,19 +365,20 @@ namespace AddressBook
             } while(!validPhone || phone.Length != 10);
             return phone;
         } // end GetValidPhoneNumber()
-
-        public static bool IsNum(string str)
-        {
-            return str.All(char.IsNumber);
-        } // end IsNum()
-
-        public static string GetValidEmail()
-        {
+        public static string GetValidEmail(bool updating)
+        { // bool updating = true if changing, false if providing original
             string email;
             bool validEmail = false;
             do
             {
-                Console.Write("Email address: ");
+                if(!updating)
+                {
+                    Console.Write("Email address: ");
+                }
+                else
+                {
+                    Console.Write("Enter the new email address: ");
+                }
                 email = Console.ReadLine();
                 if(!email.Contains("@") || !email.Contains("."))
                 {
@@ -375,6 +391,12 @@ namespace AddressBook
             } while(!validEmail);
             return email;
         } // end GetValidEmail()
+
+        public static bool IsNum(string str)
+        {
+            return str.All(char.IsNumber);
+        } // end IsNum()
+
         
         /*------------------------------ End Utilities ------------------------------*/
     }
