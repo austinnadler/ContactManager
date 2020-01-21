@@ -106,10 +106,6 @@ namespace AddressBook
                 {
                     contact = contacts[i];
                     Console.Write(i + ". " + contact.ToDisplayString());
-                    if(contact is InstructorContact ic)
-                    {
-                        Console.Write(" Office: " + ic.office);
-                    }
                     Console.WriteLine("\n------------------------------------------------------------------------------------");
                 }
             }
@@ -254,11 +250,9 @@ namespace AddressBook
                     contact.last = Console.ReadLine();
                     break;
                 case 2: 
-                    Console.Write("Enter the new phone number: ");
                     contact.phone = GetValidPhoneNumber(true);
                     break;
                 case 3:
-                    Console.Write("Enter the new email address: ");
                     contact.email = GetValidEmail(true);
                     break;
                 default:
@@ -279,11 +273,9 @@ namespace AddressBook
                         contact.last = Console.ReadLine();
                         break;
                     case 2:
-                        Console.Write("Enter the new phone number: ");
                         contact.phone = GetValidPhoneNumber(true);
                         break;
                     case 3:
-                        Console.Write("Enter the new email address: ");
                         contact.email = GetValidEmail(true);
                         break;
                     case 4:
@@ -565,9 +557,11 @@ namespace AddressBook
         /*------------------------------ End Utilities ------------------------------*/
 
         /*------------------------------ LINQ Searches ------------------------------*/
+        // LINQ ref: Pro C# 7 Ch. 12
         // TODO: Enable editing of contacts after the LINQ query runs.
         public static List<Contact> QueryByName(ref List<Contact> contacts, string value)
-        { // Use LINQ to display all contacts whose first or last name contains the value. LINQ ref: Pro C# 7 Ch. 12 & https://stackoverflow.com/questions/444798/case-insensitive-containsstring
+        {   // Use LINQ to display all contacts whose first or last name contains the value. 
+            // https://stackoverflow.com/questions/444798/case-insensitive-containsstring
             CultureInfo culture = new CultureInfo("en-US", false); 
             return  ( 
                         from c in contacts 

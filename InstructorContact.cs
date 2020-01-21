@@ -48,7 +48,7 @@ namespace AddressBook
 
         public override string ToDisplayString()
         {
-            return base.ToDisplayString() + " Office: " + officeLocation;
+            return base.ToDisplayString() + " - Office: " + officeLocation;
         } // end ToDisplayString()
 
         public override string ToStringCSV()
