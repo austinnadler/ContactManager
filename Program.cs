@@ -74,7 +74,7 @@ namespace AddressBook
                             break;
                     }
                 }
-                catch (Exception e)
+                catch (FormatException)
                 {
                     Console.WriteLine("Invalid choice, try again");
                 }
