@@ -29,6 +29,7 @@ namespace AddressBook
         { // Start the program. This method is outside of Main() so that it can be called at the end of a process.
             Console.WriteLine("\n*** Address Book ***");
             bool validChoice = false;
+            string choiceStr;
             int choice;
             do 
             {
@@ -39,10 +40,11 @@ namespace AddressBook
                                     "\n5. Search Contacts" +
                                     "\n6. Quit\n");
                 Console.Write("Enter the number of your choice: ");
-                try
+                choiceStr = Console.ReadLine();
+                if(IsNum(choiceStr))
                 {
-                    choice = Convert.ToInt32(Console.ReadLine());
-                    if(choice > 6 || choice < 1)
+                    choice = Convert.ToInt32(choiceStr);
+                    if(choice < 1 || choice > 6)
                     {
                         Console.WriteLine("Invalid choice, try again");
                     }
@@ -81,9 +83,9 @@ namespace AddressBook
                             break;
                     }
                 }
-                catch (FormatException)
+                else 
                 {
-                    Console.WriteLine("Invalid choice, try again");
+                    Console.WriteLine("Invalid Choice. Try again.");
                 }
             } while(!validChoice);
 
@@ -170,6 +172,7 @@ namespace AddressBook
         public static void EditContact(ref List<Contact> contacts)
         { // Begin the process of editing a contact. Gets a valid index using GetValidIndex() and determines what kind of contact is being dealt with. It then passes the process to the appropriate method.
             bool validChoice = false;
+            string choiceStr;
             int choice;
             int maxFieldIndex; // needed in place of a boolean so that the choice can be validated based on the number of possible choices for that contact type.
             int contactIndex = GetValidIndex(ref contacts, "edit");
@@ -188,7 +191,7 @@ namespace AddressBook
                                     "\n2. Phone #: " + ic.phone + 
                                     "\n3. Email: " + ic.email + 
                                     "\n4. Office: " + ic.office +
-                                    "\n9. Cancel");
+                                    "\n-1. Cancel");
                 maxFieldIndex = 4;
             }
             else
@@ -197,18 +200,19 @@ namespace AddressBook
                                     "\n1. Last name: " + contact.last + 
                                     "\n2. Phone #: " + contact.phone + 
                                     "\n3. Email: " + contact.email +
-                                    "\n9. Cancel");
+                                    "\n-1. Cancel");
                 maxFieldIndex = 3;
             }
 
             do
             {
                 Console.Write("\nWhat field of this contact do you want to edit?: ");
-                try
+                choiceStr = Console.ReadLine();
+                if(IsNum(choiceStr))
                 {
-                    choice = Convert.ToInt32(Console.ReadLine());
+                    choice = Convert.ToInt32(choiceStr);
 
-                    if(choice == 9) 
+                    if(choice == -1) 
                     {
                         return;
                     }
@@ -230,7 +234,7 @@ namespace AddressBook
                         }
                     }
                 }
-                catch(FormatException)
+                else
                 {
                     Console.WriteLine("Invalid choice. Try again.");
                 }
@@ -295,6 +299,7 @@ namespace AddressBook
         {
             bool found = false;
             string searchAgain;
+            string choiceStr;
             int choice;
             do
             {
@@ -304,9 +309,10 @@ namespace AddressBook
                                 "\n3. Search by email address" + 
                                 "\n4. Cancel" +
                                 "\n\nEnter your choice: ");
-                try
+                choiceStr = Console.ReadLine();
+                if(IsNum(choiceStr))
                 {
-                    choice = Convert.ToInt32(Console.ReadLine());
+                    choice = Convert.ToInt32(choiceStr);
                     if(choice > 0 && choice < 5)
                     {
                         switch(choice)
@@ -340,8 +346,8 @@ namespace AddressBook
                     {
                         Console.WriteLine("Invalid choice. Try again.");
                     }
-                } 
-                catch(FormatException)
+                }
+                else
                 {
                     Console.WriteLine("Invalid choice. Try again.");
                 }
@@ -456,14 +462,16 @@ namespace AddressBook
         { // Helper for DeleteContact & EditContact. Returns a valid index provided by user. Returns -1 if user wants to cancel.
             bool validIndex = false;
             bool isInt = false;
+            string indexStr;
             int index = -1;
             ListAllContacts(ref contacts);
             do
             {
                 Console.Write("Enter the index of the contact you want to " + action + " (or -1 to cancel): ");
-                try
+                indexStr = Console.ReadLine();
+                if(IsNum(indexStr)) 
                 {
-                    index = Convert.ToInt32(Console.ReadLine());
+                    index = Convert.ToInt32(indexStr);
 
                     if(index == -1) 
                     {
@@ -480,10 +488,11 @@ namespace AddressBook
                         Console.WriteLine("Invalid index. Try again.");
                     }
                 }
-                catch(FormatException)
+                else
                 {
                     Console.WriteLine("Invalid index. Try again.");
                 }
+                
             } while(!validIndex);
             return index;
         } // end GetValidIndex()
@@ -543,7 +552,14 @@ namespace AddressBook
 
         public static bool IsNum(string str)
         { // Return true if the provided string is comprised of all integers, false otherwise.
-            return str.All(char.IsNumber);
+            if(str == "-1") // For cancellation
+            {
+                return true;
+            } 
+            else
+            {
+                return str.All(char.IsNumber);
+            }
         } // end IsNum()
 
         /*------------------------------ End Utilities ------------------------------*/
