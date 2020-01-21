@@ -25,17 +25,20 @@ namespace AddressBook
 
         public static void Start(ref List<Contact> contacts) 
         {
-            Console.WriteLine("\n*** Address Book ***\n");
+            Console.WriteLine("\n*** Address Book ***");
             bool validChoice = false;
             int choice;
-
             do 
             {
-                Console.WriteLine("1. View Contacts\n2. Create New Contact\n3. Delete Contact\n4. Edit Contact\n5. Quit\n");
+                Console.WriteLine(  "\n1. View Contacts" +                
+                                    "\n2. Create New Contact" + 
+                                    "\n3. Delete Contact" + 
+                                    "\n4. Edit Contact" + 
+                                    "\n5. Quit\n");
                 Console.Write("Enter the number of your choice: ");
-                choice = Convert.ToInt32(Console.ReadLine());
                 try
                 {
+                    choice = Convert.ToInt32(Console.ReadLine());
                     if(choice > 5 || choice < 1)
                     {
                         Console.WriteLine("Invalid choice, try again");
@@ -44,39 +47,40 @@ namespace AddressBook
                     {
                         validChoice = true;
                     }
+
+                    switch(choice) 
+                    {
+                        case 1:
+                            ListAllContacts(ref contacts);
+                            Start(ref contacts);
+                            break;
+                        case 2:
+                            CreateNewContact(ref contacts);
+                            ListAllContacts(ref contacts);
+                            Start(ref contacts);
+                            break;
+                        case 3:
+                            DeleteContact(ref contacts);
+                            ListAllContacts(ref contacts);
+                            Start(ref contacts);
+                            break;
+                        case 4:
+                            EditContact(ref contacts);
+                            Start(ref contacts);
+                            break;
+                        case 5:
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
                     Console.WriteLine("Invalid choice, try again");
                 }
             } while(!validChoice);
 
-            switch(choice) 
-            {
-                case 1:
-                    ListAllContacts(ref contacts);
-                    Start(ref contacts);
-                    break;
-                case 2:
-                    CreateNewContact(ref contacts);
-                    ListAllContacts(ref contacts);
-                    Start(ref contacts);
-                    break;
-                case 3:
-                    DeleteContact(ref contacts);
-                    ListAllContacts(ref contacts);
-                    Start(ref contacts);
-                    break;
-                case 4:
-                    EditContact(ref contacts);
-                    Start(ref contacts);
-                    break;
-                case 5:
-                    break;
-                default:
-                    break;
-            }
+            
         } // end Start()
 
         public static void ListAllContacts(ref List<Contact> contacts) 
@@ -148,7 +152,7 @@ namespace AddressBook
         public static void DeleteContact(ref List<Contact> contacts)
         {
             contacts.RemoveAt(GetValidIndex(ref contacts, "delete"));           
-        }
+        } // end DeleteContact()
         
         public static void EditContact(ref List<Contact> contacts)
         {
@@ -308,9 +312,8 @@ namespace AddressBook
 
         /*------------------------------ Utilities ------------------------------*/
 
-        // Helper for DeleteContact & EditContact. Returns a valid index provided by user.
         public static int GetValidIndex(ref List<Contact> contacts, string action)
-        {
+        {// Helper for DeleteContact & EditContact. Returns a valid index provided by user.
             bool validIndex = false;
             bool isInt = false;
             int index = -1;

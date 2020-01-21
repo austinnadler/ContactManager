@@ -12,45 +12,39 @@ namespace AddressBook
 
         public Contact() 
         {}
+        /*-------------------------- Constructors --------------------------*/
 
         public Contact(string first, string last)
         {
             firstName = first;
             lastName = last;
-        }
+        } // end 2 arg ctor()
 
         public Contact(string first, string last, string phoneNum) : this(first, last)
         {
             phone = phoneNum;
-        } 
+        } // end 3 arg ctor()
 
         public Contact(string first, string last, string phone, string email) : this(first, last, phone)
         {
             emailAddress = email;
-        }
+        } // end 4 arg ctor
 
-        // Virtual so that it can be overridden in subclasses to add more information
-        public virtual string ToDisplayString()
-        {
-            return firstName + " " + lastName + " - Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " - Email: " + emailAddress;
-        }
+        /*-------------------------- End Constructors --------------------------*/
 
-        public virtual string ToStringCSV()
-        {
-            return firstName + "," + lastName + "," + phoneNumber + "," + emailAddress;
-        }
+        /*-------------------------- Attributes --------------------------*/
 
         public string first
         {
             get { return firstName; }
             set { firstName = value; }
-        }
+        } // end attribute first
 
         public string last
         {
             get { return lastName; }
             set { lastName = value; }
-        }
+        } // end attribute last
 
         public string phone
         {
@@ -73,7 +67,7 @@ namespace AddressBook
                     }
                 }
             }
-        }
+        } // end attribute phone
 
         public string email
         {
@@ -89,12 +83,28 @@ namespace AddressBook
                     emailAddress = value;
                 }
             }
-        }
+        } // end attribute email
+
+        /*-------------------------- End Attributes --------------------------*/
 
         /*---------- Utlities ----------*/
         private bool IsNum(string str)
         {
             return str.All(char.IsNumber);
-        }
+        } // end IsNum
+
+                // Virtual so that it can be overridden in subclasses to add more information
+        public virtual string ToDisplayString()
+        {
+            return firstName + " " + lastName + " - Phone: " + "(" + phoneNumber.Substring(0,3) + ") " + phoneNumber.Substring(3, 3) + "-" + phoneNumber.Substring(6, 4) + " - Email: " + emailAddress;
+        } // end ToDisplayString()
+
+        public virtual string ToStringCSV()
+        {
+            return firstName + "," + lastName + "," + phoneNumber + "," + emailAddress;
+        } // end ToStringCSV
+
+        /*-------------------------- End Utilities --------------------------*/
+
     }
 }
