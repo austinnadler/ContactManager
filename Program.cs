@@ -411,9 +411,9 @@ namespace AddressBook
 
         /*------------------------------ File IO ------------------------------*/
         public static List<Contact> ReadContactsFromFile()
-        { // Read all contacts from contact.csv and passes each individual line to ReadLineFromFile() to be stored in an object.
+        { // Read all contacts from contact.csv and passes each individual line (skipping the header line) to ReadLineFromFile() to be stored in an object. Uses LINQ Select() and Skip().
             {
-                return File.ReadAllLines("contacts.csv").Select(v => ReadLineFromFile(v)).ToList();
+                return File.ReadAllLines("contacts.csv").Select(v => ReadLineFromFile(v)).Skip(1).ToList();
             }
         } // ReadContactsFromFile()
 
@@ -433,7 +433,7 @@ namespace AddressBook
 
         public static void WriteContactsToFile(ref List<Contact> contacts)
         { // Write the entire List<> to contacts.csv. If one exists it's overwritten.
-            string list = "";
+            string list = "Type,First Name,Last Name,Phone number,Email address,Office\n";
             foreach(Contact contact in contacts)
             {
                 string type = "b,"; // Initialize type to basic for every contact.
