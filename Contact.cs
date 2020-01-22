@@ -57,7 +57,7 @@ namespace AddressBook
                 }
                 else
                 {
-                    if(!IsNum(value))
+                    if(!IsNumeric(value))
                     {
                         throw new ArgumentException("Phone number must only contain digits");
                     }
@@ -88,7 +88,7 @@ namespace AddressBook
         /*-------------------------- End Attributes --------------------------*/
 
         /*---------- Utlities ----------*/
-        private bool IsNum(string str)
+        private bool IsNumeric(string str)
         {
             return str.All(char.IsNumber);
         } // end IsNum

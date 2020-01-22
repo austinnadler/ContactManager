@@ -1,5 +1,3 @@
-using System;
-
 namespace AddressBook
 {
     public class InstructorContact : Contact
