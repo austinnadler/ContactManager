@@ -10,7 +10,7 @@ namespace AddressBook
     {
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             List<Contact> contacts = new List<Contact>();
             try
             {
@@ -41,7 +41,7 @@ namespace AddressBook
                                     "\n6. Quit\n");
                 Console.Write("Enter the number of your choice: ");
                 choiceStr = Console.ReadLine();
-                if(IsNum(choiceStr))
+                if(IsNumeric(choiceStr))
                 {
                     choice = Convert.ToInt32(choiceStr);
                     if(choice < 1 || choice > 6)
@@ -204,7 +204,7 @@ namespace AddressBook
             {
                 Console.Write("\nWhat field of this contact do you want to edit?: ");
                 choiceStr = Console.ReadLine();
-                if(IsNum(choiceStr))
+                if(IsNumeric(choiceStr))
                 {
                     choice = Convert.ToInt32(choiceStr);
 
@@ -288,7 +288,7 @@ namespace AddressBook
         } // EditInstructorContact()
 
         public static void SearchContacts(ref List<Contact> contacts)
-        {
+        { // Search for contacts based on users choice of field.
             bool found = false;
             string searchAgain;
             string choiceStr;
@@ -302,7 +302,7 @@ namespace AddressBook
                                 "\n4. Cancel" +
                                 "\n\nEnter your choice: ");
                 choiceStr = Console.ReadLine();
-                if(IsNum(choiceStr))
+                if(IsNumeric(choiceStr))
                 {
                     choice = Convert.ToInt32(choiceStr);
                     if(choice > 0 && choice < 5)
@@ -347,14 +347,14 @@ namespace AddressBook
         } // end SearchContacts()
 
         public static void SearchByName(ref List<Contact> contacts)
-        {
+        { // Display the results of QueryByName() to show all contacts whose first or last name contains the provided input.
             Console.Write("\nEnter the name to search by: ");
             string name = Console.ReadLine();
             List<Contact> matches = QueryByName(ref contacts, name);
             Console.WriteLine("\n------------------------------------------------------------------------------------");
             if(matches.Count > 0)
             {
-                foreach(Contact contact in matches)
+                foreach(Contact contact in contacts)
                 {
                     Console.WriteLine(contact.ToDisplayString());
                     Console.WriteLine("------------------------------------------------------------------------------------");
@@ -368,7 +368,7 @@ namespace AddressBook
         }
 
         public static void SearchByPhone(ref List<Contact> contacts)
-        {
+        { // Display the results of QueryByPhone() to show all contacts whose phone number contains the provided input.
             Console.Write("\nEnter the phone number to search by: ");
             string phone = Console.ReadLine();
             List<Contact> matches = QueryByPhone(ref contacts, phone);
@@ -389,7 +389,7 @@ namespace AddressBook
         }
 
         public static void SearchByEmail(ref List<Contact> contacts)
-        {
+        { // Display the results of QueryByEmail() to show all contacts whose email address contains the provided input.
             Console.Write("\nEnter the email to search by: ");
             string email = Console.ReadLine();
             List<Contact> matches = QueryByEmail(ref contacts, email);
@@ -461,7 +461,7 @@ namespace AddressBook
             {
                 Console.Write("Enter the index of the contact you want to " + action + " (or -1 to cancel): ");
                 indexStr = Console.ReadLine();
-                if(IsNum(indexStr)) 
+                if(IsNumeric(indexStr)) 
                 {
                     index = Convert.ToInt32(indexStr);
 
@@ -504,7 +504,7 @@ namespace AddressBook
                     Console.Write("Enter the new phone number: ");
                 }
                 phone = Console.ReadLine();
-                if(!IsNum(phone) || phone.Length != 10)
+                if(!IsNumeric(phone) || phone.Length != 10)
                 {
                     Console.WriteLine("Invalid phone number. Try again.");
                 }
@@ -542,7 +542,7 @@ namespace AddressBook
             return email;
         } // end GetValidEmail()
 
-        public static bool IsNum(string str)
+        public static bool IsNumeric(string str)
         { // Return true if the provided string is comprised of all integers, false otherwise.
             if(str == "-1") // For cancellation
             {
@@ -552,15 +552,14 @@ namespace AddressBook
             {
                 return str.All(char.IsNumber);
             }
-        } // end IsNum()
+        } // end IsNumeric()
 
         /*------------------------------ End Utilities ------------------------------*/
 
         /*------------------------------ LINQ Searches ------------------------------*/
         // LINQ ref: Pro C# 7 Ch. 12
-        // TODO: Enable editing of contacts after the LINQ query runs.
         public static List<Contact> QueryByName(ref List<Contact> contacts, string value)
-        {   // Use LINQ to display all contacts whose first or last name contains the value. 
+        {   // Use LINQ to return a list of contacts whose first or last name contains the value. 
             // https://stackoverflow.com/questions/444798/case-insensitive-containsstring
             CultureInfo culture = new CultureInfo("en-US", false); 
             return  ( 
@@ -574,20 +573,20 @@ namespace AddressBook
                         select c
                     ).ToList<Contact>();
             
-        } // end SearchForByName()
+        } // end QueryByName()
 
         public static List<Contact> QueryByPhone(ref List<Contact> contacts, string value)
-        {
+        { // Use LINQ to return a list of contacts whose phone number contains the value
             return  ( 
                         from c in contacts
                         where c.phone.Contains(value)
                         orderby c.last, c.first
                         select c
                     ).ToList<Contact>();
-        } // end SearchForByPhone()
+        } // end QueryByPhone()
 
         public static List<Contact> QueryByEmail(ref List<Contact> contacts, string value)
-        {
+        { // Use LINQ to return a list of contacts whose email address contains the value
             CultureInfo culture = new CultureInfo("en-US", false);
             return  (
                         from c in contacts
@@ -598,7 +597,7 @@ namespace AddressBook
                         orderby c.last, c.first
                         select c
                     ).ToList<Contact>();
-        } // end SearchForByEmail()
+        } // end QueryByEmail()
 
         /*------------------------------ End LINQ Searches ------------------------------*/
     }
