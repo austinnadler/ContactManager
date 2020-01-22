@@ -20,6 +20,7 @@ namespace AddressBook
             {
                 Console.WriteLine("No contacts file found...");
             }
+            ListAllContacts(ref contacts);
             Start(ref contacts);
             WriteContactsToFile(ref contacts);
             Console.ForegroundColor = ConsoleColor.White;
