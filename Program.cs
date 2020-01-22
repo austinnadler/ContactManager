@@ -117,6 +117,7 @@ namespace AddressBook
             string first, last, office, isInstr = "";
             Contact contact;
 
+            Console.WriteLine("\n*** Creating New Contact ***");
             Console.Write("\nFirst name: ");
             first = Console.ReadLine();
             Console.Write("Last name: ");
@@ -354,9 +355,9 @@ namespace AddressBook
             Console.WriteLine("\n------------------------------------------------------------------------------------");
             if(matches.Count > 0)
             {
-                foreach(Contact contact in contacts)
+                foreach(Contact match in matches)
                 {
-                    Console.WriteLine(contact.ToDisplayString());
+                    Console.WriteLine(match.ToDisplayString());
                     Console.WriteLine("------------------------------------------------------------------------------------");
                 }
             }
@@ -459,7 +460,7 @@ namespace AddressBook
             ListAllContacts(ref contacts);
             do
             {
-                Console.Write("Enter the index of the contact you want to " + action + " (or -1 to cancel): ");
+                Console.Write("\nEnter the index of the contact you want to " + action + " (or -1 to cancel): ");
                 indexStr = Console.ReadLine();
                 if(IsNumeric(indexStr)) 
                 {
@@ -544,7 +545,7 @@ namespace AddressBook
 
         public static bool IsNumeric(string str)
         { // Return true if the provided string is comprised of all integers, false otherwise.
-            if(str == "-1") // For cancellation
+            if(str == "-1") // For cancellation. No other negative values are used in this program so if the value provided is a negative other than -1, return false.
             {
                 return true;
             } 
