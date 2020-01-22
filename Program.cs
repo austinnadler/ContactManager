@@ -94,18 +94,17 @@ namespace AddressBook
 
         public static void ListAllContacts(ref List<Contact> contacts) 
         { // Print out all contacts using their ToDisplayString().
+            contacts.Sort((x, y) => x.last.CompareTo(y.last));
             if(contacts.Count < 1)
             {
                 Console.WriteLine("You have not created any contacts yet4.");
             }
             else
             {
-                Contact contact;
                 Console.WriteLine("\n------------------------------------------------------------------------------------");
                 for(int i = 0; i < contacts.Count; i++) // Regular for loop because I want to show indecies for selection
                 {
-                    contact = contacts[i];
-                    Console.Write(i + ". " + contact.ToDisplayString());
+                    Console.Write(i + ". " + contacts[i].ToDisplayString());
                     Console.WriteLine("\n------------------------------------------------------------------------------------");
                 }
             }
@@ -449,7 +448,7 @@ namespace AddressBook
 
         /*------------------------------ End File IO ------------------------------*/
 
-        /*------------------------------ Utilities ------------------------------*/
+        /*------------------------------- Utilities- ------------------------------*/
 
         public static int GetValidIndex(ref List<Contact> contacts, string action)
         { // Helper for DeleteContact & EditContact. Returns a valid index provided by user. Returns -1 if user wants to cancel.
@@ -544,7 +543,7 @@ namespace AddressBook
         } // end GetValidEmail()
 
         public static bool IsNumeric(string str)
-        { // Return true if the provided string is comprised of all integers, false otherwise.
+        { // Return true if the provided string is comprised of all integers, false otherwise. Used to avoid using stanard exceptions as much as possible.
             if(str == "-1") // For cancellation. No other negative values are used in this program so if the value provided is a negative other than -1, return false.
             {
                 return true;
@@ -563,41 +562,43 @@ namespace AddressBook
         {   // Use LINQ to return a list of contacts whose first or last name contains the value. 
             // https://stackoverflow.com/questions/444798/case-insensitive-containsstring
             CultureInfo culture = new CultureInfo("en-US", false); 
-            return  ( 
-                        from c in contacts 
-                        where 
-                        (
-                            culture.CompareInfo.IndexOf(c.first, value, CompareOptions.IgnoreCase) >= 0 
-                            || culture.CompareInfo.IndexOf(c.last, value, CompareOptions.IgnoreCase) >= 0
-                        )
-                        orderby c.last, c.first 
-                        select c
-                    ).ToList<Contact>();
-            
+            return  
+            ( 
+                from c in contacts 
+                where 
+                (
+                    culture.CompareInfo.IndexOf(c.first, value, CompareOptions.IgnoreCase) >= 0 
+                    || culture.CompareInfo.IndexOf(c.last, value, CompareOptions.IgnoreCase) >= 0
+                )
+                orderby c.last, c.first 
+                select c
+            ).ToList<Contact>();
         } // end QueryByName()
 
         public static List<Contact> QueryByPhone(ref List<Contact> contacts, string value)
         { // Use LINQ to return a list of contacts whose phone number contains the value
-            return  ( 
-                        from c in contacts
-                        where c.phone.Contains(value)
-                        orderby c.last, c.first
-                        select c
-                    ).ToList<Contact>();
+            return  
+            ( 
+                from c in contacts
+                where c.phone.Contains(value)
+                orderby c.last, c.first
+                select c
+            ).ToList<Contact>();
         } // end QueryByPhone()
 
         public static List<Contact> QueryByEmail(ref List<Contact> contacts, string value)
         { // Use LINQ to return a list of contacts whose email address contains the value
             CultureInfo culture = new CultureInfo("en-US", false);
-            return  (
-                        from c in contacts
-                        where
-                        (
-                            culture.CompareInfo.IndexOf(c.email, value, CompareOptions.IgnoreCase) >= 0
-                        )
-                        orderby c.last, c.first
-                        select c
-                    ).ToList<Contact>();
+            return  
+            (
+                from c in contacts
+                where
+                (
+                    culture.CompareInfo.IndexOf(c.email, value, CompareOptions.IgnoreCase) >= 0
+                )
+                orderby c.last, c.first
+                select c
+            ).ToList<Contact>();
         } // end QueryByEmail()
 
         /*------------------------------ End LINQ Searches ------------------------------*/
