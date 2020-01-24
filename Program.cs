@@ -286,7 +286,7 @@ namespace AddressBook
                     default:
                         break;
                 }
-        } // EditInstructorContact()
+        } // end EditInstructorContact()
 
         public static void SearchContacts(ref List<Contact> contacts)
         { // Search for contacts based on users choice of field.
@@ -366,7 +366,7 @@ namespace AddressBook
                 Console.WriteLine("No contacts first or last name contains " + name);
                 Console.WriteLine("------------------------------------------------------------------------------------\n");
             }
-        }
+        } // end SearchByName()
 
         public static void SearchByPhone(ref List<Contact> contacts)
         { // Display the results of QueryByPhone() to show all contacts whose phone number contains the provided input.
@@ -387,7 +387,7 @@ namespace AddressBook
                 Console.WriteLine("No contacts phone number contains " + phone);
                 Console.WriteLine("------------------------------------------------------------------------------------");
             }
-        }
+        } // end SearchByPhone
 
         public static void SearchByEmail(ref List<Contact> contacts)
         { // Display the results of QueryByEmail() to show all contacts whose email address contains the provided input.
@@ -416,7 +416,7 @@ namespace AddressBook
             {
                 return File.ReadAllLines("contacts.csv").Select(v => ReadLineFromFile(v)).Skip(1).ToList();
             }
-        } // ReadContactsFromFile()
+        } // end ReadContactsFromFile()
 
         public static Contact ReadLineFromFile(string csvLine)
         { // Helper for ReadContactsFromFile(). Reads a single line from contacts.csv and stores each of them in an object.
@@ -430,7 +430,7 @@ namespace AddressBook
             {
                 return new InstructorContact(values[1], values[2], values[3], values[4], values[5]);
             }
-        } // ReadLineFromFile()
+        } // end ReadLineFromFile()
 
         public static void WriteContactsToFile(ref List<Contact> contacts)
         { // Write the entire List<> to contacts.csv. If one exists it's overwritten.
@@ -445,7 +445,7 @@ namespace AddressBook
                 list += type + contact.ToStringCSV() + "\n";
             }
             System.IO.File.WriteAllText("contacts.csv", list);
-        } // WriteContactsToFile()
+        } // end WriteContactsToFile()
 
         /*------------------------------ End File IO ------------------------------*/
 
@@ -485,7 +485,6 @@ namespace AddressBook
                 {
                     Console.WriteLine("Invalid index. Try again.");
                 }
-                
             } while(!validIndex);
             return index;
         } // end GetValidIndex()
@@ -554,14 +553,12 @@ namespace AddressBook
                 return str.All(char.IsNumber);
             }
         } // end IsNumeric()
-
         /*------------------------------ End Utilities ------------------------------*/
 
         /*------------------------------ LINQ Searches ------------------------------*/
         // LINQ ref: Pro C# 7 Ch. 12
         public static List<Contact> QueryByName(ref List<Contact> contacts, string value)
-        {   // Use LINQ to return a list of contacts whose first or last name contains the value. 
-            // https://stackoverflow.com/questions/444798/case-insensitive-containsstring
+        {   // Use LINQ to return a list of contacts whose first or last name contains the value.
             CultureInfo culture = new CultureInfo("en-US", false); 
             return  
             ( 
@@ -601,7 +598,6 @@ namespace AddressBook
                 select c
             ).ToList<Contact>();
         } // end QueryByEmail()
-
         /*------------------------------ End LINQ Searches ------------------------------*/
     }
 }
